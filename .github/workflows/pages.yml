@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm ci --no-audit --no-fund
       - name: Build for project Pages
         run: npx vite build --base=/Fcc-gpt-line-ink/ --outDir=dist/client
       - uses: actions/configure-pages@v5
