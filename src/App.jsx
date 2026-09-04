@@ -201,7 +201,7 @@ function LanguageSwitch({ lang, onChange, label }) {
 }
 
 function Header({ active, progress, onVisit, t, lang, onLanguage }) {
-  return <header className="site-header" aria-label={t.mainNav}>
+  return <header className={`site-header ${progress > 0.015 ? "scrolled" : ""}`} aria-label={t.mainNav}>
     <Mark homeLabel={t.home} />
     <nav className="nav-rail" aria-label={t.primaryNav}>
       {navItems.map((id) => <a key={id} className={active === id ? "active" : ""} href={`#${id}`}>{t.nav[id]}</a>)}
@@ -353,11 +353,14 @@ function ValueCard({ number, word, copy }) {
 }
 
 function ScrollBranch({ progress }) {
-  const branchProgress = Math.min(1, Math.max(0, (progress - 0.035) / 0.69));
+  const branchProgress = Math.min(1, Math.max(0, progress));
   const segment = (start, end) => Math.min(1, Math.max(0, (branchProgress - start) / (end - start)));
-  const drawStyle = (start = 0, end = 1) => ({
+  const drawStyle = (start = 0, end = 1, maxOpacity = 1) => ({
     strokeDashoffset: 1 - segment(start, end),
-    opacity: segment(start, end),
+    opacity: segment(start, end) * maxOpacity,
+  });
+  const fadeStyle = (start, end, maxOpacity = 1) => ({
+    opacity: segment(start, end) * maxOpacity,
   });
 
   return <div className="scroll-branch" aria-hidden="true">
@@ -365,21 +368,50 @@ function ScrollBranch({ progress }) {
       <path
         className="branch-stroke branch-trunk"
         pathLength="1"
-        style={drawStyle(0, 1)}
-        d="M28 0 C36 115 54 190 45 285 C37 377 16 455 30 555 C43 648 70 708 60 815 C49 925 26 1010 40 1110 C54 1214 76 1290 65 1395 C54 1504 32 1600 48 1710 C59 1792 78 1880 70 2000"
+        style={drawStyle(0, 1, .9)}
+        d="M29 0 C37 96 55 188 46 286 C38 374 17 456 31 555 C44 647 69 715 60 817 C51 920 26 1010 41 1112 C55 1215 76 1292 65 1397 C54 1500 34 1604 48 1712 C60 1801 77 1887 69 2000"
       />
-      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.12, .25)} d="M43 276 C72 247 96 226 132 220 C118 244 101 264 76 281" />
-      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.17, .27)} d="M112 235 C125 218 144 216 155 228 C142 242 126 247 112 235 Z" />
-      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.28, .42)} d="M31 563 C11 534 2 506 8 472 C24 491 36 512 43 538" />
-      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.33, .43)} d="M13 490 C0 477 1 458 14 448 C27 462 29 479 13 490 Z" />
-      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.43, .58)} d="M59 819 C82 780 107 754 146 744 C132 777 109 802 78 826" />
-      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.49, .59)} d="M121 770 C132 747 151 739 164 749 C153 770 138 779 121 770 Z" />
-      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.58, .72)} d="M41 1113 C18 1081 8 1050 15 1017 C31 1035 43 1060 51 1087" />
-      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.63, .73)} d="M19 1035 C4 1022 4 1004 18 994 C31 1008 34 1025 19 1035 Z" />
-      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.72, .87)} d="M64 1398 C88 1368 108 1333 142 1325 C132 1353 111 1380 82 1407" />
-      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.77, .88)} d="M119 1344 C131 1325 150 1321 161 1333 C149 1351 134 1357 119 1344 Z" />
-      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.86, .98)} d="M48 1712 C23 1688 11 1658 15 1629 C31 1644 45 1664 57 1689" />
-      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.9, 1)} d="M20 1646 C7 1634 8 1618 21 1608 C34 1620 35 1637 20 1646 Z" />
+      <path
+        className="branch-stroke branch-trunk-echo"
+        pathLength="1"
+        style={drawStyle(.02, 1, .22)}
+        d="M33 0 C41 102 58 186 49 288 C41 381 22 456 35 553 C48 644 73 713 63 820 C53 925 31 1007 45 1110 C59 1211 80 1290 69 1399 C58 1504 38 1602 52 1710 C64 1799 81 1889 73 2000"
+      />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.1, .24, .82)} d="M46 278 C73 248 101 226 137 220 C123 245 103 266 76 283" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.16, .27, .78)} d="M113 236 C125 217 145 215 157 228 C143 244 127 249 113 236 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.19, .28, .48)} d="M115 236 C129 233 142 231 154 228" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.27, .41, .82)} d="M32 563 C11 534 1 505 7 470 C24 489 37 512 44 540" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.33, .44, .78)} d="M13 489 C-1 476 0 457 14 447 C27 460 30 478 13 489 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.35, .45, .48)} d="M13 488 C14 475 14 462 14 449" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.42, .58, .82)} d="M60 818 C83 780 110 753 149 744 C134 779 111 804 79 828" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.49, .6, .78)} d="M122 771 C132 747 152 738 165 749 C154 770 139 781 122 771 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.51, .61, .48)} d="M124 770 C138 763 150 756 162 750" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.57, .72, .82)} d="M41 1114 C18 1082 8 1049 15 1015 C32 1035 44 1061 52 1089" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.63, .74, .78)} d="M19 1035 C4 1021 4 1003 18 993 C32 1008 34 1025 19 1035 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.65, .75, .48)} d="M19 1034 C19 1021 18 1008 18 995" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.71, .87, .82)} d="M65 1398 C88 1367 111 1332 146 1325 C135 1355 112 1382 82 1409" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.77, .89, .78)} d="M120 1344 C132 1324 151 1320 162 1333 C150 1352 135 1358 120 1344 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.8, .9, .48)} d="M121 1344 C135 1340 148 1336 160 1333" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.85, .98, .82)} d="M49 1713 C24 1688 11 1657 15 1627 C32 1643 46 1665 58 1691" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.9, 1, .78)} d="M20 1645 C7 1633 8 1617 21 1607 C34 1619 35 1636 20 1645 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.92, 1, .48)} d="M20 1644 C20 1632 20 1620 21 1609" />
+
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.2, .31, .38)} d="M39 356 l10 -4 M37 374 l12 -5" />
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.47, .57, .38)} d="M51 742 l12 -5 M52 759 l9 -4" />
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.68, .79, .38)} d="M55 1260 l12 -5 M57 1278 l9 -4" />
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.86, .96, .38)} d="M48 1660 l11 -4 M50 1677 l8 -3" />
+
+      <circle className="branch-knot" cx="46" cy="286" r="3.2" style={fadeStyle(.17, .27, .7)} />
+      <circle className="branch-knot" cx="31" cy="555" r="2.6" style={fadeStyle(.33, .43, .62)} />
+      <circle className="branch-knot" cx="60" cy="817" r="3.1" style={fadeStyle(.49, .59, .7)} />
+      <circle className="branch-knot" cx="41" cy="1112" r="2.8" style={fadeStyle(.63, .73, .64)} />
+      <circle className="branch-knot" cx="65" cy="1397" r="3" style={fadeStyle(.77, .88, .68)} />
     </svg>
   </div>;
 }
@@ -388,6 +420,7 @@ export function App() {
   const [visitOpen, setVisitOpen] = useState(false);
   const [active, setActive] = useState("sundays");
   const [progress, setProgress] = useState(0);
+  const [branchProgress, setBranchProgress] = useState(0);
   const [lang, setLang] = useState(() => {
     try {
       const saved = window.localStorage.getItem("fcc-language");
@@ -427,6 +460,16 @@ export function App() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
       setProgress(ratio);
+
+      const aboutTop = document.getElementById("about")?.offsetTop ?? window.innerHeight;
+      const sermonsTop = document.getElementById("sermons")?.offsetTop ?? document.documentElement.scrollHeight;
+      const branchStart = aboutTop - window.innerHeight * .86;
+      const branchEnd = sermonsTop - window.innerHeight * .42;
+      const branchRatio = branchEnd > branchStart
+        ? Math.min(1, Math.max(0, (window.scrollY - branchStart) / (branchEnd - branchStart)))
+        : 0;
+      setBranchProgress(branchRatio);
+
       const heroProgress = Math.min(1, window.scrollY / Math.max(1, window.innerHeight));
       document.documentElement.style.setProperty("--hero-scroll", heroProgress.toFixed(3));
       ticking = false;
@@ -439,11 +482,13 @@ export function App() {
     };
     syncScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
       revealObserver.disconnect();
       navObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
   }, []);
 
@@ -459,7 +504,7 @@ export function App() {
 
   return <div id="top" className="site-frame" style={{ "--paper-texture": `url(${asset("paper-texture.png")})` }}>
     <Header active={active} progress={progress} onVisit={() => setVisitOpen(true)} t={t} lang={lang} onLanguage={setLang} />
-    <ScrollBranch progress={progress} />
+    <ScrollBranch progress={branchProgress} />
     <main>
       <section id="sundays" className="hero" aria-labelledby="hero-title" ref={heroRef} onPointerMove={onHeroPointer}>
         <div className="hero-image-wrap">
