@@ -30,6 +30,9 @@ const COPY = {
     directions: "GET DIRECTIONS",
     serviceNames: { es: "Español", en: "English" },
     heroEyebrow: "// BRONX · NYC",
+    heroAlt: "Worship team singing and playing music at FCC",
+    imageTagSunday: "SUNDAY",
+    imageTagBronx: "THE BRONX",
     heroTitle: ["A Church of", "the Bronx,", "for the Bronx."],
     heroDeck: ["Building a Kingdom Family that", "Displays the Love of Jesus"],
     planVisit: "PLAN YOUR VISIT",
@@ -39,6 +42,7 @@ const COPY = {
     whoWeAre: "// WHO WE ARE",
     aboutTitle: ["A kingdom family,", "rooted in the Bronx."],
     aboutCopy: "We gather around God’s Word, live as a family, and love our neighbors in word and deed. Everyone is welcome to come, listen, ask questions, and meet Jesus with us.",
+    quote: "“They devoted themselves to the apostles’ teaching and the fellowship.”",
     acts: "ACTS 2:42",
     valuesLabel: "Our values",
     values: [
@@ -80,6 +84,7 @@ const COPY = {
     giveTitle: ["Give toward Gospel", "work in the Bronx."],
     giveCopy: "Support the ministry and mission of Fordham Community Church.",
     giveOnline: "GIVE ONLINE",
+    bronxLine: "THE BRONX",
     kingdomFamily: "KINGDOM FAMILY",
     backTop: "BACK TO TOP",
     fordhamBronx: "FORDHAM · THE BRONX",
@@ -106,6 +111,9 @@ const COPY = {
     directions: "CÓMO LLEGAR",
     serviceNames: { es: "Español", en: "Inglés" },
     heroEyebrow: "// BRONX · NYC",
+    heroAlt: "Equipo de adoración cantando y tocando música en FCC",
+    imageTagSunday: "DOMINGO",
+    imageTagBronx: "EL BRONX",
     heroTitle: ["Una iglesia", "del Bronx,", "para el Bronx."],
     heroDeck: ["Formando una familia del Reino que", "muestra el amor de Jesús"],
     planVisit: "PLANEA TU VISITA",
@@ -115,6 +123,7 @@ const COPY = {
     whoWeAre: "// QUIÉNES SOMOS",
     aboutTitle: ["Una familia del Reino,", "arraigada en el Bronx."],
     aboutCopy: "Nos reunimos alrededor de la Palabra de Dios, vivimos como familia y amamos a nuestros vecinos de palabra y de hecho. Todos son bienvenidos a venir, escuchar, hacer preguntas y conocer a Jesús con nosotros.",
+    quote: "“Perseveraban en la enseñanza de los apóstoles y en la comunión.”",
     acts: "HECHOS 2:42",
     valuesLabel: "Nuestros valores",
     values: [
@@ -156,6 +165,7 @@ const COPY = {
     giveTitle: ["Da para la obra", "del Evangelio en el Bronx."],
     giveCopy: "Apoya el ministerio y la misión de Fordham Community Church.",
     giveOnline: "DAR EN LÍNEA",
+    bronxLine: "EL BRONX",
     kingdomFamily: "FAMILIA DEL REINO",
     backTop: "VOLVER ARRIBA",
     fordhamBronx: "FORDHAM · EL BRONX",
@@ -420,8 +430,8 @@ export function App() {
     <main>
       <section id="sundays" className="hero" aria-labelledby="hero-title" ref={heroRef} onPointerMove={onHeroPointer}>
         <div className="hero-image-wrap">
-          <img className="hero-image" src={asset("fcc-worship.webp")} alt="Worship team singing and playing music at FCC" />
-          <div className="hero-image-tag"><span>SUNDAY</span><span>THE BRONX</span></div>
+          <img className="hero-image" src={asset("fcc-worship.webp")} alt={t.heroAlt} />
+          <div className="hero-image-tag"><span>{t.imageTagSunday}</span><span>{t.imageTagBronx}</span></div>
         </div>
         <div className="hero-copy">
           <p className="eyebrow hero-item">{t.heroEyebrow}</p>
@@ -442,7 +452,7 @@ export function App() {
         <div className="section-label"><span>01</span><span>{t.whoWeAre}</span></div>
         <div className="about-copy">
           <div><h2>{t.aboutTitle[0]}<br />{t.aboutTitle[1]}</h2><p>{t.aboutCopy}</p></div>
-          <blockquote>“They devoted themselves to the apostles’ teaching and the fellowship.”<cite>{t.acts}</cite></blockquote>
+          <blockquote>{t.quote}<cite>{t.acts}</cite></blockquote>
         </div>
         <div className="values" aria-label={t.valuesLabel}>
           {t.values.map(([word, copy], index) => <ValueCard key={word} number={`0${index + 1}`} word={word} copy={copy} />)}
@@ -491,7 +501,7 @@ export function App() {
         <h2>{t.giveTitle[0]}<br />{t.giveTitle[1]}</h2>
         <p>{t.giveCopy}</p>
         <a className="ink-button button-arrow" href="https://www.fccbronx.org/give" target="_blank" rel="noreferrer"><span>{t.giveOnline}</span><ArrowIcon /></a>
-        <div className="give-line" aria-hidden="true"><span>THE BRONX</span><span>·</span><span>JESUS</span><span>·</span><span>{t.kingdomFamily}</span></div>
+        <div className="give-line" aria-hidden="true"><span>{t.bronxLine}</span><span>·</span><span>JESUS</span><span>·</span><span>{t.kingdomFamily}</span></div>
       </section>
     </main>
 
