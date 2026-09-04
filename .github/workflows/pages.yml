@@ -2,10 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-      - "design/**"
-      - "polish/**"
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -41,22 +38,23 @@ jobs:
         working-directory: stable-src
         run: npx vite build --base=/Fcc-gpt-line-ink/ --outDir="${{ github.workspace }}/dist/client"
 
-      - name: Check out branch preview
-        if: github.ref_name != 'main'
+      - name: Check out active PR preview
+        id: preview
+        continue-on-error: true
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: design/scrolling-branch-polish
           path: preview-src
 
       - name: Install preview dependencies
-        if: github.ref_name != 'main'
+        if: steps.preview.outcome == 'success'
         working-directory: preview-src
         run: npm ci --no-audit --no-fund
 
-      - name: Build branch preview
-        if: github.ref_name != 'main'
+      - name: Build PR preview
+        if: steps.preview.outcome == 'success'
         working-directory: preview-src
-        run: npx vite build --base="/Fcc-gpt-line-ink/previews/${{ github.ref_name }}/" --outDir="${{ github.workspace }}/dist/client/previews/${{ github.ref_name }}"
+        run: npx vite build --base=/Fcc-gpt-line-ink/previews/design/scrolling-branch-polish/ --outDir="${{ github.workspace }}/dist/client/previews/design/scrolling-branch-polish"
 
       - uses: actions/configure-pages@v5
         with:
