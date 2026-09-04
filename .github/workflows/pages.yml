@@ -18,32 +18,48 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out stable site
+      - name: Check out stable main
         uses: actions/checkout@v4
+        with:
+          ref: main
+          path: stable-src
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - name: Install stable dependencies
-        run: npm ci --no-audit --no-fund
-      - name: Build stable site
-        run: npx vite build --base=/Fcc-gpt-line-ink/ --outDir=dist/client
+          cache-dependency-path: stable-src/package-lock.json
 
-      - name: Check out PR preview
+      - name: Install stable dependencies
+        working-directory: stable-src
+        run: npm ci --no-audit --no-fund
+
+      - name: Build stable site
+        working-directory: stable-src
+        run: npx vite build --base=/Fcc-gpt-line-ink/ --outDir="${{ github.workspace }}/dist/client"
+
+      - name: Check out active PR preview
+        id: preview
+        continue-on-error: true
         uses: actions/checkout@v4
         with:
-          ref: design/hig-bilingual-pass
+          ref: design/scrolling-branch-polish
           path: preview-src
+
       - name: Install preview dependencies
+        if: steps.preview.outcome == 'success'
         working-directory: preview-src
         run: npm ci --no-audit --no-fund
+
       - name: Build PR preview
+        if: steps.preview.outcome == 'success'
         working-directory: preview-src
-        run: npx vite build --base=/Fcc-gpt-line-ink/preview/ --outDir="${{ github.workspace }}/dist/client/preview"
+        run: npx vite build --base=/Fcc-gpt-line-ink/previews/design/scrolling-branch-polish/ --outDir="${{ github.workspace }}/dist/client/previews/design/scrolling-branch-polish"
 
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
