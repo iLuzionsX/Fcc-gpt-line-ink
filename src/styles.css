@@ -1194,14 +1194,16 @@ footer .mark-link{width:56px;height:56px}
   scrollbar-width:none;
 }
 .interior-nav::-webkit-scrollbar{display:none}
-.interior-nav a{white-space:nowrap;flex:0 0 auto}
+.interior-nav a{white-space:nowrap;flex:0 0 auto;min-width:44px;justify-content:center}
 .full-interior-header{grid-template-columns:minmax(190px,.8fr) minmax(0,1.65fr) minmax(250px,.8fr)}
 .full-interior-nav{gap:22px}
 .interior-footer-links{display:flex;gap:18px;align-items:center}
 .interior-footer-links a{
   min-height:44px;
+  min-width:44px;
   display:flex;
   align-items:center;
+  justify-content:center;
   color:inherit;
   text-decoration:none;
   border-bottom:1px solid transparent;
