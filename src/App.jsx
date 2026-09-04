@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InteriorPage } from "./InteriorPages.jsx";
 
 const navItems = ["about", "sundays", "connect", "sermons", "give"];
 const services = [
@@ -421,6 +422,10 @@ export function App() {
   const [active, setActive] = useState("sundays");
   const [progress, setProgress] = useState(0);
   const [branchProgress, setBranchProgress] = useState(0);
+  const [route, setRoute] = useState(() => {
+    const slug = window.location.hash.replace(/^#\//, "");
+    return ["city-link", "sermons", "fcc-kids"].includes(slug) ? slug : null;
+  });
   const [lang, setLang] = useState(() => {
     try {
       const saved = window.localStorage.getItem("fcc-language");
@@ -433,6 +438,15 @@ export function App() {
   const heroRef = useRef(null);
 
   useEffect(() => {
+    const syncRoute = () => {
+      const slug = window.location.hash.replace(/^#\//, "");
+      setRoute(["city-link", "sermons", "fcc-kids"].includes(slug) ? slug : null);
+    };
+    window.addEventListener("hashchange", syncRoute);
+    return () => window.removeEventListener("hashchange", syncRoute);
+  }, []);
+
+  useEffect(() => {
     document.documentElement.lang = lang === "es" ? "es" : "en";
     try {
       window.localStorage.setItem("fcc-language", lang);
@@ -442,6 +456,8 @@ export function App() {
   }, [lang]);
 
   useEffect(() => {
+    if (route) return undefined;
+
     const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
       if (entry.isIntersecting) entry.target.classList.add("visible");
     }), { threshold: 0.12 });
@@ -490,7 +506,11 @@ export function App() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [route]);
+
+  if (route) {
+    return <InteriorPage route={route} lang={lang} onLanguage={setLang} />;
+  }
 
   const onHeroPointer = (event) => {
     const node = heroRef.current;
@@ -554,8 +574,8 @@ export function App() {
           <p className="eyebrow">{t.findPeople}</p>
           <h2>{t.churchMore[0]}<br />{t.churchMore[1]}</h2>
           <div className="link-stack">
-            <a href="https://www.fccbronx.org/city-link-groups" target="_blank" rel="noreferrer"><span>{t.links[0][0]}</span><span>{t.links[0][1]}</span><ArrowIcon /></a>
-            <a href="https://www.fccbronx.org/fcc-kids" target="_blank" rel="noreferrer"><span>{t.links[1][0]}</span><span>{t.links[1][1]}</span><ArrowIcon /></a>
+            <a href="#/city-link"><span>{t.links[0][0]}</span><span>{t.links[0][1]}</span><ArrowIcon /></a>
+            <a href="#/fcc-kids"><span>{t.links[1][0]}</span><span>{t.links[1][1]}</span><ArrowIcon /></a>
             <a href="https://www.fccbronx.org/contact" target="_blank" rel="noreferrer"><span>{t.links[2][0]}</span><span>{t.links[2][1]}</span><ArrowIcon /></a>
           </div>
         </div>
@@ -569,7 +589,7 @@ export function App() {
             <p className="eyebrow">{t.listen}</p>
             <h2>{t.hear[0]}<br />{t.hear[1]}</h2>
             <p>{t.recent}</p>
-            <a className="paper-button button-arrow" href="https://www.fccbronx.org/sermon" target="_blank" rel="noreferrer"><span>{t.watch}</span><ArrowIcon /></a>
+            <a className="paper-button button-arrow" href="#/sermons"><span>{t.watch}</span><ArrowIcon /></a>
           </div>
         </div>
       </section>
