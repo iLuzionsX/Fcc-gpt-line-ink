@@ -301,7 +301,7 @@ function KidsPage({ copy }) {
       </div>
       <div className="promise-copy">
         <p>{copy.promiseCopy}</p>
-        <span className="ink-star" aria-hidden="true">✦</span>
+        <span className="ink-star" aria-hidden="true" />
       </div>
     </section>
 
