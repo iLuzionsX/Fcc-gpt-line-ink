@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InteriorPage } from "./InteriorPages.jsx";
+import { MoreInteriorPage } from "./MoreInteriorPages.jsx";
 
 const navItems = ["about", "sundays", "connect", "sermons", "give"];
+const interiorRoutes = ["about", "beliefs", "team", "sundays", "city-link", "sermons", "fcc-kids", "contact", "building", "give"];
 const services = [
   { id: "es", time: "9:45 AM" },
   { id: "en", time: "11:45 AM" },
@@ -424,7 +426,7 @@ export function App() {
   const [branchProgress, setBranchProgress] = useState(0);
   const [route, setRoute] = useState(() => {
     const slug = window.location.hash.replace(/^#\//, "");
-    return ["city-link", "sermons", "fcc-kids"].includes(slug) ? slug : null;
+    return interiorRoutes.includes(slug) ? slug : null;
   });
   const [lang, setLang] = useState(() => {
     try {
@@ -440,7 +442,7 @@ export function App() {
   useEffect(() => {
     const syncRoute = () => {
       const slug = window.location.hash.replace(/^#\//, "");
-      setRoute(["city-link", "sermons", "fcc-kids"].includes(slug) ? slug : null);
+      setRoute(interiorRoutes.includes(slug) ? slug : null);
     };
     window.addEventListener("hashchange", syncRoute);
     return () => window.removeEventListener("hashchange", syncRoute);
@@ -509,7 +511,9 @@ export function App() {
   }, [route]);
 
   if (route) {
-    return <InteriorPage route={route} lang={lang} onLanguage={setLang} />;
+    return ["city-link", "sermons", "fcc-kids"].includes(route)
+      ? <InteriorPage route={route} lang={lang} onLanguage={setLang} />
+      : <MoreInteriorPage route={route} lang={lang} onLanguage={setLang} />;
   }
 
   const onHeroPointer = (event) => {
@@ -537,7 +541,7 @@ export function App() {
           <p className="hero-deck hero-item">{t.heroDeck[0]}<br className="desktop-break" /> {t.heroDeck[1]}</p>
           <button className="ink-button hero-item button-arrow" onClick={() => setVisitOpen(true)}><span>{t.planVisit}</span><ArrowIcon /></button>
           <div className="service-block hero-item">
-            <span className="service-kicker">{t.sundays}</span>
+            <a className="service-kicker service-page-link" href="#/sundays">{t.sundays}<ArrowIcon /></a>
             <div className="times"><p><span>{t.serviceNames.es.toUpperCase()}</span><strong>9:45 AM</strong></p><p><span>{t.serviceNames.en.toUpperCase()}</span><strong>11:45 AM</strong></p></div>
           </div>
           <address className="address hero-item">{t.address}</address>
@@ -549,7 +553,13 @@ export function App() {
       <section id="about" className="section section-about" data-reveal>
         <div className="section-label"><span>01</span><span>{t.whoWeAre}</span></div>
         <div className="about-copy">
-          <div><h2>{t.aboutTitle[0]}<br />{t.aboutTitle[1]}</h2><p>{t.aboutCopy}</p></div>
+          <div><h2>{t.aboutTitle[0]}<br />{t.aboutTitle[1]}</h2><p>{t.aboutCopy}</p>
+            <nav className="about-page-links" aria-label={lang === "es" ? "Más sobre FCC" : "More about FCC"}>
+              <a href="#/about">{lang === "es" ? "SOBRE FCC" : "ABOUT FCC"}<ArrowIcon /></a>
+              <a href="#/beliefs">{lang === "es" ? "LO QUE CREEMOS" : "WHAT WE BELIEVE"}<ArrowIcon /></a>
+              <a href="#/team">{lang === "es" ? "EQUIPO" : "TEAM"}<ArrowIcon /></a>
+            </nav>
+          </div>
           <blockquote>{t.quote}<cite>{t.acts}</cite></blockquote>
         </div>
         <div className="values" aria-label={t.valuesLabel}>
@@ -576,7 +586,7 @@ export function App() {
           <div className="link-stack">
             <a href="#/city-link"><span>{t.links[0][0]}</span><span>{t.links[0][1]}</span><ArrowIcon /></a>
             <a href="#/fcc-kids"><span>{t.links[1][0]}</span><span>{t.links[1][1]}</span><ArrowIcon /></a>
-            <a href="https://www.fccbronx.org/contact" target="_blank" rel="noreferrer"><span>{t.links[2][0]}</span><span>{t.links[2][1]}</span><ArrowIcon /></a>
+            <a href="#/contact"><span>{t.links[2][0]}</span><span>{t.links[2][1]}</span><ArrowIcon /></a>
           </div>
         </div>
       </section>
@@ -598,7 +608,7 @@ export function App() {
         <p className="eyebrow">{t.generosity}</p>
         <h2>{t.giveTitle[0]}<br />{t.giveTitle[1]}</h2>
         <p>{t.giveCopy}</p>
-        <a className="ink-button button-arrow" href="https://www.fccbronx.org/give" target="_blank" rel="noreferrer"><span>{t.giveOnline}</span><ArrowIcon /></a>
+        <a className="ink-button button-arrow" href="#/give"><span>{t.giveOnline}</span><ArrowIcon /></a>
         <div className="give-line" aria-hidden="true"><span>{t.bronxLine}</span><span>·</span><span>JESUS</span><span>·</span><span>{t.kingdomFamily}</span></div>
       </section>
     </main>
