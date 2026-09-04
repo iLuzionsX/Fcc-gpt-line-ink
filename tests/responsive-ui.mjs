@@ -88,9 +88,16 @@ try {
 
 
     const ministryPages = [
+      { slug: "about", english: "A Kingdom family", spanish: "Una familia del Reino" },
+      { slug: "beliefs", english: "Truth we receive", spanish: "Verdad que recibimos" },
+      { slug: "team", english: "Known by name", spanish: "Conocidos por nombre" },
+      { slug: "sundays", english: "Come worship", spanish: "Ven a adorar" },
       { slug: "city-link", english: "Life together", spanish: "Vida juntos" },
       { slug: "sermons", english: "The Word", spanish: "La Palabra" },
       { slug: "fcc-kids", english: "Little people", spanish: "Personas pequeñas" },
+      { slug: "contact", english: "Start a", spanish: "Empieza una" },
+      { slug: "building", english: "A home for", spanish: "Un hogar para" },
+      { slug: "give", english: "Give toward", spanish: "Da para" },
     ];
 
     for (const ministry of ministryPages) {
@@ -118,6 +125,14 @@ try {
           ".series-list a",
           ".archive-link",
           ".kids-sunday .ink-button",
+          ".practice-links a",
+          ".about-deeper a",
+          ".service-times a",
+          ".arrival-actions a",
+          ".contact-options > a",
+          ".campaign-ask .ink-button",
+          ".give-options a",
+          ".interior-footer-links a",
           ".interior-footer a",
         ].join(",");
 
