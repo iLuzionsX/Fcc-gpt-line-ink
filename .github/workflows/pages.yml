@@ -2,7 +2,10 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - "design/**"
+      - "polish/**"
   workflow_dispatch:
 
 permissions:
@@ -18,32 +21,47 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out stable site
+      - name: Check out stable main
         uses: actions/checkout@v4
+        with:
+          ref: main
+          path: stable-src
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - name: Install stable dependencies
-        run: npm ci --no-audit --no-fund
-      - name: Build stable site
-        run: npx vite build --base=/Fcc-gpt-line-ink/ --outDir=dist/client
+          cache-dependency-path: stable-src/package-lock.json
 
-      - name: Check out PR preview
+      - name: Install stable dependencies
+        working-directory: stable-src
+        run: npm ci --no-audit --no-fund
+
+      - name: Build stable site
+        working-directory: stable-src
+        run: npx vite build --base=/Fcc-gpt-line-ink/ --outDir="${{ github.workspace }}/dist/client"
+
+      - name: Check out branch preview
+        if: github.ref_name != 'main'
         uses: actions/checkout@v4
         with:
-          ref: design/hig-bilingual-pass
+          ref: ${{ github.sha }}
           path: preview-src
+
       - name: Install preview dependencies
+        if: github.ref_name != 'main'
         working-directory: preview-src
         run: npm ci --no-audit --no-fund
-      - name: Build PR preview
+
+      - name: Build branch preview
+        if: github.ref_name != 'main'
         working-directory: preview-src
-        run: npx vite build --base=/Fcc-gpt-line-ink/preview/ --outDir="${{ github.workspace }}/dist/client/preview"
+        run: npx vite build --base="/Fcc-gpt-line-ink/previews/${{ github.ref_name }}/" --outDir="${{ github.workspace }}/dist/client/previews/${{ github.ref_name }}"
 
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
