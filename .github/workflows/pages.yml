@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, design/hig-bilingual-pass]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -18,14 +18,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out stable site
+        uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - name: Build for project Pages
+      - name: Install stable dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Build stable site
         run: npx vite build --base=/Fcc-gpt-line-ink/ --outDir=dist/client
+
+      - name: Check out PR preview
+        uses: actions/checkout@v4
+        with:
+          ref: design/hig-bilingual-pass
+          path: preview-src
+      - name: Install preview dependencies
+        working-directory: preview-src
+        run: npm ci --no-audit --no-fund
+      - name: Build PR preview
+        working-directory: preview-src
+        run: npx vite build --base=/Fcc-gpt-line-ink/preview/ --outDir="${{ github.workspace }}/dist/client/preview"
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true
