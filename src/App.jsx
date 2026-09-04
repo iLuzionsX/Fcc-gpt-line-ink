@@ -352,6 +352,38 @@ function ValueCard({ number, word, copy }) {
   </article>;
 }
 
+function ScrollBranch({ progress }) {
+  const branchProgress = Math.min(1, Math.max(0, (progress - 0.035) / 0.69));
+  const segment = (start, end) => Math.min(1, Math.max(0, (branchProgress - start) / (end - start)));
+  const drawStyle = (start = 0, end = 1) => ({
+    strokeDashoffset: 1 - segment(start, end),
+    opacity: segment(start, end),
+  });
+
+  return <div className="scroll-branch" aria-hidden="true">
+    <svg viewBox="0 0 170 2000" preserveAspectRatio="none" focusable="false">
+      <path
+        className="branch-stroke branch-trunk"
+        pathLength="1"
+        style={drawStyle(0, 1)}
+        d="M28 0 C36 115 54 190 45 285 C37 377 16 455 30 555 C43 648 70 708 60 815 C49 925 26 1010 40 1110 C54 1214 76 1290 65 1395 C54 1504 32 1600 48 1710 C59 1792 78 1880 70 2000"
+      />
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.12, .25)} d="M43 276 C72 247 96 226 132 220 C118 244 101 264 76 281" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.17, .27)} d="M112 235 C125 218 144 216 155 228 C142 242 126 247 112 235 Z" />
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.28, .42)} d="M31 563 C11 534 2 506 8 472 C24 491 36 512 43 538" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.33, .43)} d="M13 490 C0 477 1 458 14 448 C27 462 29 479 13 490 Z" />
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.43, .58)} d="M59 819 C82 780 107 754 146 744 C132 777 109 802 78 826" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.49, .59)} d="M121 770 C132 747 151 739 164 749 C153 770 138 779 121 770 Z" />
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.58, .72)} d="M41 1113 C18 1081 8 1050 15 1017 C31 1035 43 1060 51 1087" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.63, .73)} d="M19 1035 C4 1022 4 1004 18 994 C31 1008 34 1025 19 1035 Z" />
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.72, .87)} d="M64 1398 C88 1368 108 1333 142 1325 C132 1353 111 1380 82 1407" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.77, .88)} d="M119 1344 C131 1325 150 1321 161 1333 C149 1351 134 1357 119 1344 Z" />
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.86, .98)} d="M48 1712 C23 1688 11 1658 15 1629 C31 1644 45 1664 57 1689" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.9, 1)} d="M20 1646 C7 1634 8 1618 21 1608 C34 1620 35 1637 20 1646 Z" />
+    </svg>
+  </div>;
+}
+
 export function App() {
   const [visitOpen, setVisitOpen] = useState(false);
   const [active, setActive] = useState("sundays");
@@ -427,6 +459,7 @@ export function App() {
 
   return <div id="top" className="site-frame" style={{ "--paper-texture": `url(${asset("paper-texture.png")})` }}>
     <Header active={active} progress={progress} onVisit={() => setVisitOpen(true)} t={t} lang={lang} onLanguage={setLang} />
+    <ScrollBranch progress={progress} />
     <main>
       <section id="sundays" className="hero" aria-labelledby="hero-title" ref={heroRef} onPointerMove={onHeroPointer}>
         <div className="hero-image-wrap">
