@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: responsive-qa-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   responsive:
     runs-on: ubuntu-latest
@@ -18,7 +22,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
+      - run: npm ci --no-audit --no-fund
       - name: Install browser test dependency
         run: npm install --no-save playwright@1.55.0
       - name: Install Chromium
