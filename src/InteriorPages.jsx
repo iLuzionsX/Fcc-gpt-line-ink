@@ -153,10 +153,12 @@ function InteriorHeader({ lang, onLanguage, shared }) {
       <img src={asset("fcc-mark.png")} alt="" />
       <span>{shared.church}</span>
     </a>
-    <nav className="interior-nav" aria-label="Ministry pages">
-      <a href="#/city-link">CITY LINK</a>
-      <a href="#/sermons">SERMONS</a>
-      <a href="#/fcc-kids">FCC KIDS</a>
+    <nav className="interior-nav" aria-label="FCC pages">
+      {(lang === "es" ? [
+        ["about","NOSOTROS"],["beliefs","CREENCIAS"],["team","EQUIPO"],["sundays","DOMINGOS"],["city-link","CITY LINK"],["sermons","SERMONES"],["fcc-kids","FCC KIDS"],["give","DAR"],
+      ] : [
+        ["about","ABOUT"],["beliefs","BELIEFS"],["team","TEAM"],["sundays","SUNDAYS"],["city-link","CITY LINK"],["sermons","SERMONS"],["fcc-kids","FCC KIDS"],["give","GIVE"],
+      ]).map(([slug,label]) => <a href={`#/${slug}`} key={slug}>{label}</a>)}
     </nav>
     <div className="interior-actions">
       <div className="language-switch" role="group" aria-label={shared.language}>
