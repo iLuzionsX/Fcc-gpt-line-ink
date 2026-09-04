@@ -52,6 +52,7 @@ body.panel-open{overflow:hidden}
   line-height:1;
   white-space:nowrap;
   min-height:44px;
+  min-width:44px;
   display:inline-flex;
   align-items:center;
 }
@@ -560,7 +561,7 @@ footer .mark-link{width:56px;height:56px}
   .mark-link{width:44px;height:44px}
   .header-actions{grid-column:2;grid-row:1;justify-self:end;gap:7px}
   .language-switch{height:44px}
-  .language-switch button{width:42px;min-width:42px}
+  .language-switch button{width:44px;min-width:44px}
   .header-visit{min-height:44px}
   .nav-rail{grid-column:1/3;grid-row:2;padding:0;gap:23px}
   .nav-rail a{min-height:44px}
@@ -605,7 +606,7 @@ footer .mark-link{width:56px;height:56px}
 @media(max-width:420px){
   .site-header{padding-inline:12px}
   .header-actions{gap:5px}
-  .language-switch button{width:40px;min-width:40px}
+  .language-switch button{width:44px;min-width:44px}
   .header-visit{padding-inline:9px;letter-spacing:.13em}
   .header-visit .arrow-icon{width:14px;height:14px}
   .nav-rail{gap:20px}
