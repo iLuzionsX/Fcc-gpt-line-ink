@@ -62,6 +62,7 @@ try {
     await dialog.waitFor({ state: "visible" });
     if (!(await dialog.innerText()).includes("Ven tal")) throw new Error(`${testCase.name}: visit panel did not translate to Spanish`);
     await dialog.getByRole("button", { name: "CERRAR" }).click();
+    await page.locator(".visit-shell").waitFor({ state: "hidden" });
 
     await page.locator(".language-switch button").filter({ hasText: "EN" }).click();
     await page.waitForFunction(() => document.documentElement.lang === "en");
@@ -70,6 +71,15 @@ try {
 
     const bodyText = await page.locator("body").innerText();
     if (/[↗↑↓→←]/.test(bodyText)) throw new Error(`${testCase.name}: unicode arrow character found in rendered UI`);
+
+    const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    const step = Math.max(360, Math.floor(testCase.height * 0.72));
+    for (let y = 0; y < pageHeight; y += step) {
+      await page.evaluate((scrollY) => window.scrollTo(0, scrollY), y);
+      await page.waitForTimeout(90);
+    }
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(180);
 
     await page.screenshot({
       path: `artifacts/responsive/${testCase.name}.png`,
