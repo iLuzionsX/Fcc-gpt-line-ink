@@ -1,61 +1,50 @@
-# Design QA
-
-**Source visual truth**
-
-- Path: `/workspace/scratch/79313e5f4671/generated_images/exec-f6ad686f-638f-4635-9d89-464e69c65c13.png`
-- Source pixels: 1486 × 1059.
-- Normalized comparison: 1348 × 926, top-aligned, device scale factor 1.
-
-**Implementation evidence**
-
-- Browser-rendered screenshot: `/workspace/scratch/79313e5f4671/fccbronx-site/implementation-final.jpg`
-- Screenshot pixels / CSS viewport: 1348 × 926 at device scale factor 1.
-- State: desktop hero after entrance motion completed.
-- Combined comparison: `/workspace/scratch/79313e5f4671/fccbronx-site/design-comparison.jpg`.
-- Primary interactions tested: section navigation and active states; visit-planner open, service selection, form success, close, and Escape support; gallery sliding; external direction and content-link targets; scroll reveals.
-- Console: no warnings or errors from the local app.
-- Responsive implementation includes 900 px and 520 px breakpoints, an always-visible horizontally scrollable mobile nav, stacked hero and sections, full-width service controls, large tap targets, and reduced-motion fallbacks. The selected cloud browser did not expose a resize control, so a separate phone screenshot was not available.
-
-**Full-view comparison evidence**
-
-- The implementation preserves the source composition: circular standalone mark, right-aligned text navigation, warm paper ground, torn worship photo, large three-line headline, service-time block, address, and one lower-left botanical branch.
-- Major-region proportions, text wrapping, negative space, and the image crop align closely after normalization.
-
-**Focused comparison evidence**
-
-- Header: the supplied circular mark is used without adjacent text; navigation remains text-only and visible.
-- Hero image: the same FCC worship photograph is used with matching subject focus and torn-edge treatment.
-- Typography: Arial/Helvetica provides the source's neo-grotesk structure; weight, tracking, line height, and three-line wrap are aligned.
-- Color: sampled warm cream and near-black tokens match the source; no gradients are used.
-- Decorative art: a raster botanical crop is used; no tree or building drawings remain.
-
-**Comparison history**
-
-1. P1 — the first paper texture crop accidentally repeated a strip of the worship image. Fixed by recropping a clean paper-only source region. Post-fix browser evidence shows a continuous cream ground.
-2. P2 — the first botanical crop carried an opaque rectangular ground and a fragment of the photo. Fixed by recropping and deriving a transparent antialiased alpha mask. Post-fix evidence shows the branch integrated into the page.
-3. P1 — a below-fold connect image still contained a rejected building illustration. Fixed by replacing it with a flower-only FCC artwork crop and removing unused building/tree assets from the project. Post-fix browser evidence shows only the approved botanical motif.
-
-**Findings**
-
-- No actionable P0, P1, or P2 visual or interaction differences remain.
-- Typography is a close freely available/system match rather than the exact unidentified source face; this is acceptable and does not change hierarchy or wrapping.
-
-**Open Questions**
-
-- None blocking.
-
-**Implementation Checklist**
-
-- [x] Source-faithful hero composition.
-- [x] Supplied FCC photography and circular mark.
-- [x] No hamburger navigation.
-- [x] Functional visit conversion path.
-- [x] Sliding gallery and scroll-triggered motion.
-- [x] Keyboard focus, Escape close, and reduced-motion support.
-- [x] Production build and static hosting checks.
-
-**Follow-up Polish**
-
-- Capture an additional physical-phone pass after publication to confirm platform-specific font rasterization.
+# FCC Ink in Motion — design QA
 
 final result: passed
+
+## Source and evidence
+
+This is an adaptation of the six supplied FCC brand images, not a pixel clone of a flyer or the OpenAI website. The rejected concepts are not used.
+
+- Source visual truth: supplied `01679B7D-E3FA-45BF-85F5-6AC76C2DD43F.jpeg`, 1536×864, preserved as `public/assets/retreat.jpg`; other original posters: `ecclesiastes.jpg`, `membership.jpg`.
+- Motion reference: https://openai.com/index/gpt-6-astra/ — live inspection of draggable artwork, scroll transitions, tabbed content.
+- Implementation: Vite preview, desktop 1363×936 CSS pixels, phone 390×844 CSS pixels in same-origin iframe. CI also tests native 390×844 and 1440×1000 viewports.
+- Captures: `artifacts/ink-qa/desktop-final.jpg`, `artifacts/ink-qa/phone-final.jpg`. The gray phone-capture surround is QA infrastructure, not app UI.
+- Full-view comparison: `artifacts/ink-qa/comparison-final.jpg`. Source and implementation scaled proportionally and letterboxed; comparison concerns brand vocabulary, not identical content or page geometry. Density 1.
+- Focused checks: full-size screenshots and browser inspection of logo, hatching, script, Spanish wrapping, chapter controls, event carousel and dialog.
+
+## Comparison history
+
+1. P1: white artwork rectangles inside transformed layers. Added ivory backing at compositing boundaries, multiplied artwork, clipped scene overflow. Recaptured and compared; exposed edges resolved.
+2. P2: longer Spanish headline touched citrus. Adjusted Spanish type scale and indent; desktop and phone rechecked.
+3. P2: whole-hero transform moved visit controls during scrolling. Isolated transformation to the composition. Phone dialog opened successfully afterward.
+4. P2: About link measured 36×44 px. Set minimum width 44 px. Responsive CI rerun passed.
+
+## Required fidelity surfaces
+
+- Typography: self-hosted Inter Variable and Caveat adapt the source's bold sans/loose-script pairing. EN/ES wrapping reviewed. No generic high-contrast editorial serif.
+- Layout: wide desktop composition; separately arranged phone hero; stacked phone chapters. No horizontal overflow in tested viewports. Existing ministry layouts retained.
+- Color: warm ivory and near-black, with restrained dark worship section. Compositing boundaries rechecked after transforms.
+- Assets: original event posters retain lettering and QR imagery. Tree, tomb and communion artwork prepared from supplied drawings; not CSS/SVG substitutes. Prepared WebPs total approximately 240 KB. Existing actual FCC worship photograph retained.
+- Content: bilingual UI and honest visit panel; no fake registration submission. Event links go to teaching/contact, not invented registration forms. Original poster language retained.
+
+## Verification
+
+- Production build passed; routing tests 3/3 passed.
+- PR quality run 33937586298 passed.
+- Responsive run 33937586295 passed: EN/ES home and ten ministry routes at 390×844 and 1440×1000, overflow, tap targets, dialog/FAQ, chapter controls, keyboard tab navigation and event scrolling.
+- Manual browser: language controls; Spanish phone dialog; FAQ expansion; closing dialog; chapter selection and arrow keys; artwork keyboard rotation and reset; event advance (523 px observed); return to top.
+- No app-origin console error observed. One extension metadata error excluded.
+- Reduced-motion CSS and pause implemented. Physical iPhone Safari and OS reduced-motion behavior remain unverified device-level checks.
+
+## Remaining polish
+
+P3: subtle paper tint in the small pre-existing branch. P3: extend the homepage motion language into retained ministry layouts in a future pass. Neither blocks core use.
+
+## Checklist
+
+- [x] Correct compositing and Spanish overlap.
+- [x] Stabilize controls and pass mobile target tests.
+- [x] Compare source and final browser captures.
+- [x] Preserve original posters and ministry routes.
+- [x] Separate preview; main homepage is not replaced.
