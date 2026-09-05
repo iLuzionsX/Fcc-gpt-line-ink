@@ -86,6 +86,87 @@ try {
       fullPage: true,
     });
 
+
+    const ministryPages = [
+      { slug: "about", english: "A Kingdom family", spanish: "Una familia del Reino" },
+      { slug: "beliefs", english: "Truth we receive", spanish: "Verdad que recibimos" },
+      { slug: "team", english: "Known by name", spanish: "Conocidos por nombre" },
+      { slug: "sundays", english: "Come worship", spanish: "Ven a adorar" },
+      { slug: "city-link", english: "Life together", spanish: "Vida juntos" },
+      { slug: "sermons", english: "The Word", spanish: "La Palabra" },
+      { slug: "fcc-kids", english: "Little people", spanish: "Personas pequeñas" },
+      { slug: "contact", english: "Start a", spanish: "Empieza una" },
+      { slug: "building", english: "A home for", spanish: "Un hogar para" },
+      { slug: "give", english: "Give toward", spanish: "Da para" },
+    ];
+
+    for (const ministry of ministryPages) {
+      await page.goto(`${baseURL}#/${ministry.slug}`, { waitUntil: "networkidle" });
+
+      const ministryOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      if (ministryOverflow > 1) throw new Error(`${testCase.name}/${ministry.slug}: horizontal overflow of ${ministryOverflow}px`);
+
+      const shell = page.locator(".interior-shell");
+      if (!(await shell.isVisible())) throw new Error(`${testCase.name}/${ministry.slug}: interior page shell is not visible`);
+      if (!(await page.locator(".interior-header").isVisible())) throw new Error(`${testCase.name}/${ministry.slug}: interior header is not visible`);
+
+      const englishTitle = (await page.locator(".interior-hero h1").innerText()).toLowerCase();
+      if (!englishTitle.includes(ministry.english.toLowerCase())) {
+        throw new Error(`${testCase.name}/${ministry.slug}: English title did not render`);
+      }
+
+      if (testCase.touch) {
+        const ministryTargetSelector = [
+          ".language-switch button",
+          ".interior-home",
+          ".interior-nav a",
+          ".network-copy .ink-button",
+          ".latest-card",
+          ".series-list a",
+          ".archive-link",
+          ".kids-sunday .ink-button",
+          ".practice-links a",
+          ".about-deeper a",
+          ".service-times a",
+          ".arrival-actions a",
+          ".contact-options > a",
+          ".campaign-ask .ink-button",
+          ".give-options a",
+          ".interior-footer-links a",
+          ".interior-footer a",
+        ].join(",");
+
+        const ministryTargets = page.locator(ministryTargetSelector);
+        for (let index = 0; index < await ministryTargets.count(); index += 1) {
+          const target = ministryTargets.nth(index);
+          if (!(await target.isVisible())) continue;
+          const box = await target.boundingBox();
+          if (!box) continue;
+          if (box.width < 43.5 || box.height < 43.5) {
+            throw new Error(`${testCase.name}/${ministry.slug}: control below 44px target: ${await target.evaluate((node) => node.outerHTML.slice(0, 180))} (${box.width}x${box.height})`);
+          }
+        }
+      }
+
+      await page.locator(".language-switch button").filter({ hasText: "ES" }).click();
+      await page.waitForFunction(() => document.documentElement.lang === "es");
+      const spanishTitle = (await page.locator(".interior-hero h1").innerText()).toLowerCase();
+      if (!spanishTitle.includes(ministry.spanish.toLowerCase())) {
+        throw new Error(`${testCase.name}/${ministry.slug}: Spanish title did not render`);
+      }
+
+      await page.locator(".language-switch button").filter({ hasText: "EN" }).click();
+      await page.waitForFunction(() => document.documentElement.lang === "en");
+
+      const ministryBodyText = await page.locator("body").innerText();
+      if (/[↗↑↓→←]/.test(ministryBodyText)) throw new Error(`${testCase.name}/${ministry.slug}: unicode arrow character found in rendered UI`);
+
+      await page.screenshot({
+        path: `artifacts/responsive/${testCase.name}-${ministry.slug}.png`,
+        fullPage: true,
+      });
+    }
+
     await context.close();
   }
 } finally {

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InteriorPage } from "./InteriorPages.jsx";
+import { MoreInteriorPage } from "./MoreInteriorPages.jsx";
 
 const navItems = ["about", "sundays", "connect", "sermons", "give"];
+const interiorRoutes = ["about", "beliefs", "team", "sundays", "city-link", "sermons", "fcc-kids", "contact", "building", "give"];
 const services = [
   { id: "es", time: "9:45 AM" },
   { id: "en", time: "11:45 AM" },
@@ -201,7 +204,7 @@ function LanguageSwitch({ lang, onChange, label }) {
 }
 
 function Header({ active, progress, onVisit, t, lang, onLanguage }) {
-  return <header className="site-header" aria-label={t.mainNav}>
+  return <header className={`site-header ${progress > 0.015 ? "scrolled" : ""}`} aria-label={t.mainNav}>
     <Mark homeLabel={t.home} />
     <nav className="nav-rail" aria-label={t.primaryNav}>
       {navItems.map((id) => <a key={id} className={active === id ? "active" : ""} href={`#${id}`}>{t.nav[id]}</a>)}
@@ -352,10 +355,79 @@ function ValueCard({ number, word, copy }) {
   </article>;
 }
 
+function ScrollBranch({ progress }) {
+  const branchProgress = Math.min(1, Math.max(0, progress));
+  const segment = (start, end) => Math.min(1, Math.max(0, (branchProgress - start) / (end - start)));
+  const drawStyle = (start = 0, end = 1, maxOpacity = 1) => ({
+    strokeDashoffset: 1 - segment(start, end),
+    opacity: segment(start, end) * maxOpacity,
+  });
+  const fadeStyle = (start, end, maxOpacity = 1) => ({
+    opacity: segment(start, end) * maxOpacity,
+  });
+
+  return <div className="scroll-branch" aria-hidden="true">
+    <svg viewBox="0 0 170 2000" preserveAspectRatio="none" focusable="false">
+      <path
+        className="branch-stroke branch-trunk"
+        pathLength="1"
+        style={drawStyle(0, 1, .9)}
+        d="M29 0 C37 96 55 188 46 286 C38 374 17 456 31 555 C44 647 69 715 60 817 C51 920 26 1010 41 1112 C55 1215 76 1292 65 1397 C54 1500 34 1604 48 1712 C60 1801 77 1887 69 2000"
+      />
+      <path
+        className="branch-stroke branch-trunk-echo"
+        pathLength="1"
+        style={drawStyle(.02, 1, .22)}
+        d="M33 0 C41 102 58 186 49 288 C41 381 22 456 35 553 C48 644 73 713 63 820 C53 925 31 1007 45 1110 C59 1211 80 1290 69 1399 C58 1504 38 1602 52 1710 C64 1799 81 1889 73 2000"
+      />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.1, .24, .82)} d="M46 278 C73 248 101 226 137 220 C123 245 103 266 76 283" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.16, .27, .78)} d="M113 236 C125 217 145 215 157 228 C143 244 127 249 113 236 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.19, .28, .48)} d="M115 236 C129 233 142 231 154 228" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.27, .41, .82)} d="M32 563 C11 534 1 505 7 470 C24 489 37 512 44 540" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.33, .44, .78)} d="M13 489 C-1 476 0 457 14 447 C27 460 30 478 13 489 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.35, .45, .48)} d="M13 488 C14 475 14 462 14 449" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.42, .58, .82)} d="M60 818 C83 780 110 753 149 744 C134 779 111 804 79 828" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.49, .6, .78)} d="M122 771 C132 747 152 738 165 749 C154 770 139 781 122 771 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.51, .61, .48)} d="M124 770 C138 763 150 756 162 750" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.57, .72, .82)} d="M41 1114 C18 1082 8 1049 15 1015 C32 1035 44 1061 52 1089" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.63, .74, .78)} d="M19 1035 C4 1021 4 1003 18 993 C32 1008 34 1025 19 1035 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.65, .75, .48)} d="M19 1034 C19 1021 18 1008 18 995" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.71, .87, .82)} d="M65 1398 C88 1367 111 1332 146 1325 C135 1355 112 1382 82 1409" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.77, .89, .78)} d="M120 1344 C132 1324 151 1320 162 1333 C150 1352 135 1358 120 1344 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.8, .9, .48)} d="M121 1344 C135 1340 148 1336 160 1333" />
+
+      <path className="branch-stroke branch-twig" pathLength="1" style={drawStyle(.85, .98, .82)} d="M49 1713 C24 1688 11 1657 15 1627 C32 1643 46 1665 58 1691" />
+      <path className="branch-stroke branch-leaf" pathLength="1" style={drawStyle(.9, 1, .78)} d="M20 1645 C7 1633 8 1617 21 1607 C34 1619 35 1636 20 1645 Z" />
+      <path className="branch-stroke branch-vein" pathLength="1" style={drawStyle(.92, 1, .48)} d="M20 1644 C20 1632 20 1620 21 1609" />
+
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.2, .31, .38)} d="M39 356 l10 -4 M37 374 l12 -5" />
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.47, .57, .38)} d="M51 742 l12 -5 M52 759 l9 -4" />
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.68, .79, .38)} d="M55 1260 l12 -5 M57 1278 l9 -4" />
+      <path className="branch-stroke branch-scratch" pathLength="1" style={drawStyle(.86, .96, .38)} d="M48 1660 l11 -4 M50 1677 l8 -3" />
+
+      <circle className="branch-knot" cx="46" cy="286" r="3.2" style={fadeStyle(.17, .27, .7)} />
+      <circle className="branch-knot" cx="31" cy="555" r="2.6" style={fadeStyle(.33, .43, .62)} />
+      <circle className="branch-knot" cx="60" cy="817" r="3.1" style={fadeStyle(.49, .59, .7)} />
+      <circle className="branch-knot" cx="41" cy="1112" r="2.8" style={fadeStyle(.63, .73, .64)} />
+      <circle className="branch-knot" cx="65" cy="1397" r="3" style={fadeStyle(.77, .88, .68)} />
+    </svg>
+  </div>;
+}
+
 export function App() {
   const [visitOpen, setVisitOpen] = useState(false);
   const [active, setActive] = useState("sundays");
   const [progress, setProgress] = useState(0);
+  const [branchProgress, setBranchProgress] = useState(0);
+  const [route, setRoute] = useState(() => {
+    const slug = window.location.hash.replace(/^#\//, "");
+    return interiorRoutes.includes(slug) ? slug : null;
+  });
   const [lang, setLang] = useState(() => {
     try {
       const saved = window.localStorage.getItem("fcc-language");
@@ -368,6 +440,15 @@ export function App() {
   const heroRef = useRef(null);
 
   useEffect(() => {
+    const syncRoute = () => {
+      const slug = window.location.hash.replace(/^#\//, "");
+      setRoute(interiorRoutes.includes(slug) ? slug : null);
+    };
+    window.addEventListener("hashchange", syncRoute);
+    return () => window.removeEventListener("hashchange", syncRoute);
+  }, []);
+
+  useEffect(() => {
     document.documentElement.lang = lang === "es" ? "es" : "en";
     try {
       window.localStorage.setItem("fcc-language", lang);
@@ -377,6 +458,8 @@ export function App() {
   }, [lang]);
 
   useEffect(() => {
+    if (route) return undefined;
+
     const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
       if (entry.isIntersecting) entry.target.classList.add("visible");
     }), { threshold: 0.12 });
@@ -395,6 +478,16 @@ export function App() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
       setProgress(ratio);
+
+      const aboutTop = document.getElementById("about")?.offsetTop ?? window.innerHeight;
+      const sermonsTop = document.getElementById("sermons")?.offsetTop ?? document.documentElement.scrollHeight;
+      const branchStart = aboutTop - window.innerHeight * .86;
+      const branchEnd = sermonsTop - window.innerHeight * .42;
+      const branchRatio = branchEnd > branchStart
+        ? Math.min(1, Math.max(0, (window.scrollY - branchStart) / (branchEnd - branchStart)))
+        : 0;
+      setBranchProgress(branchRatio);
+
       const heroProgress = Math.min(1, window.scrollY / Math.max(1, window.innerHeight));
       document.documentElement.style.setProperty("--hero-scroll", heroProgress.toFixed(3));
       ticking = false;
@@ -407,13 +500,21 @@ export function App() {
     };
     syncScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
       revealObserver.disconnect();
       navObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
-  }, []);
+  }, [route]);
+
+  if (route) {
+    return ["city-link", "sermons", "fcc-kids"].includes(route)
+      ? <InteriorPage route={route} lang={lang} onLanguage={setLang} />
+      : <MoreInteriorPage route={route} lang={lang} onLanguage={setLang} />;
+  }
 
   const onHeroPointer = (event) => {
     const node = heroRef.current;
@@ -427,6 +528,7 @@ export function App() {
 
   return <div id="top" className="site-frame" style={{ "--paper-texture": `url(${asset("paper-texture.png")})` }}>
     <Header active={active} progress={progress} onVisit={() => setVisitOpen(true)} t={t} lang={lang} onLanguage={setLang} />
+    <ScrollBranch progress={branchProgress} />
     <main>
       <section id="sundays" className="hero" aria-labelledby="hero-title" ref={heroRef} onPointerMove={onHeroPointer}>
         <div className="hero-image-wrap">
@@ -439,7 +541,7 @@ export function App() {
           <p className="hero-deck hero-item">{t.heroDeck[0]}<br className="desktop-break" /> {t.heroDeck[1]}</p>
           <button className="ink-button hero-item button-arrow" onClick={() => setVisitOpen(true)}><span>{t.planVisit}</span><ArrowIcon /></button>
           <div className="service-block hero-item">
-            <span className="service-kicker">{t.sundays}</span>
+            <a className="service-kicker service-page-link" href="#/sundays">{t.sundays}<ArrowIcon /></a>
             <div className="times"><p><span>{t.serviceNames.es.toUpperCase()}</span><strong>9:45 AM</strong></p><p><span>{t.serviceNames.en.toUpperCase()}</span><strong>11:45 AM</strong></p></div>
           </div>
           <address className="address hero-item">{t.address}</address>
@@ -451,7 +553,13 @@ export function App() {
       <section id="about" className="section section-about" data-reveal>
         <div className="section-label"><span>01</span><span>{t.whoWeAre}</span></div>
         <div className="about-copy">
-          <div><h2>{t.aboutTitle[0]}<br />{t.aboutTitle[1]}</h2><p>{t.aboutCopy}</p></div>
+          <div><h2>{t.aboutTitle[0]}<br />{t.aboutTitle[1]}</h2><p>{t.aboutCopy}</p>
+            <nav className="about-page-links" aria-label={lang === "es" ? "Más sobre FCC" : "More about FCC"}>
+              <a href="#/about">{lang === "es" ? "SOBRE FCC" : "ABOUT FCC"}<ArrowIcon /></a>
+              <a href="#/beliefs">{lang === "es" ? "LO QUE CREEMOS" : "WHAT WE BELIEVE"}<ArrowIcon /></a>
+              <a href="#/team">{lang === "es" ? "EQUIPO" : "TEAM"}<ArrowIcon /></a>
+            </nav>
+          </div>
           <blockquote>{t.quote}<cite>{t.acts}</cite></blockquote>
         </div>
         <div className="values" aria-label={t.valuesLabel}>
@@ -476,9 +584,9 @@ export function App() {
           <p className="eyebrow">{t.findPeople}</p>
           <h2>{t.churchMore[0]}<br />{t.churchMore[1]}</h2>
           <div className="link-stack">
-            <a href="https://www.fccbronx.org/city-link-groups" target="_blank" rel="noreferrer"><span>{t.links[0][0]}</span><span>{t.links[0][1]}</span><ArrowIcon /></a>
-            <a href="https://www.fccbronx.org/fcc-kids" target="_blank" rel="noreferrer"><span>{t.links[1][0]}</span><span>{t.links[1][1]}</span><ArrowIcon /></a>
-            <a href="https://www.fccbronx.org/contact" target="_blank" rel="noreferrer"><span>{t.links[2][0]}</span><span>{t.links[2][1]}</span><ArrowIcon /></a>
+            <a href="#/city-link"><span>{t.links[0][0]}</span><span>{t.links[0][1]}</span><ArrowIcon /></a>
+            <a href="#/fcc-kids"><span>{t.links[1][0]}</span><span>{t.links[1][1]}</span><ArrowIcon /></a>
+            <a href="#/contact"><span>{t.links[2][0]}</span><span>{t.links[2][1]}</span><ArrowIcon /></a>
           </div>
         </div>
       </section>
@@ -491,7 +599,7 @@ export function App() {
             <p className="eyebrow">{t.listen}</p>
             <h2>{t.hear[0]}<br />{t.hear[1]}</h2>
             <p>{t.recent}</p>
-            <a className="paper-button button-arrow" href="https://www.fccbronx.org/sermon" target="_blank" rel="noreferrer"><span>{t.watch}</span><ArrowIcon /></a>
+            <a className="paper-button button-arrow" href="#/sermons"><span>{t.watch}</span><ArrowIcon /></a>
           </div>
         </div>
       </section>
@@ -500,7 +608,7 @@ export function App() {
         <p className="eyebrow">{t.generosity}</p>
         <h2>{t.giveTitle[0]}<br />{t.giveTitle[1]}</h2>
         <p>{t.giveCopy}</p>
-        <a className="ink-button button-arrow" href="https://www.fccbronx.org/give" target="_blank" rel="noreferrer"><span>{t.giveOnline}</span><ArrowIcon /></a>
+        <a className="ink-button button-arrow" href="#/give"><span>{t.giveOnline}</span><ArrowIcon /></a>
         <div className="give-line" aria-hidden="true"><span>{t.bronxLine}</span><span>·</span><span>JESUS</span><span>·</span><span>{t.kingdomFamily}</span></div>
       </section>
     </main>

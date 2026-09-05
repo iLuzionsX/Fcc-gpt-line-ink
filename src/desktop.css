@@ -1,0 +1,252 @@
+/*
+ * Desktop composition layer
+ * Imported after styles.css so wide screens get a deliberate editorial layout
+ * without changing the tablet/mobile system.
+ */
+
+@media (min-width: 1100px) {
+  :root{
+    --desktop-gutter:clamp(52px,5.25vw,104px);
+  }
+
+  html{scroll-padding-top:92px}
+
+  .site-header{
+    height:92px;
+    padding:14px var(--desktop-gutter);
+    grid-template-columns:58px 1fr auto;
+    gap:clamp(28px,3vw,54px);
+  }
+  .mark-link{width:56px;height:56px}
+  .nav-rail{gap:clamp(24px,2.5vw,44px)}
+  .nav-rail a{font-size:9px}
+
+  /* Hero: use the full landscape canvas instead of a tall poster composition. */
+  .hero{
+    min-height:clamp(650px,calc(100svh - 92px),880px);
+    grid-template-columns:minmax(0,1.56fr) minmax(420px,.74fr);
+    gap:clamp(44px,4.2vw,86px);
+    align-items:center;
+    padding:24px var(--desktop-gutter) 68px 0;
+  }
+  .hero-image-wrap{
+    height:clamp(560px,69vh,780px);
+    min-height:0;
+  }
+  .hero-copy{
+    max-width:640px;
+    padding-top:0;
+  }
+  h1{
+    font-size:clamp(68px,5.55vw,108px);
+    line-height:.91;
+    margin-bottom:28px;
+  }
+  .hero-deck{
+    max-width:540px;
+    margin-bottom:30px;
+  }
+  .service-block{
+    width:min(100%,390px);
+    margin-top:30px;
+  }
+  .scroll-cue{right:var(--desktop-gutter);bottom:24px}
+
+  /* Main page: reduce the repeated full-screen "slide" rhythm. */
+  .section{
+    padding:clamp(88px,6.3vw,122px) var(--desktop-gutter);
+  }
+  .section-label{
+    margin-bottom:clamp(44px,3.8vw,66px);
+  }
+
+  .about-copy{
+    grid-template-columns:minmax(0,1.35fr) minmax(280px,.5fr);
+    gap:clamp(64px,7vw,132px);
+  }
+  .about-copy>div{max-width:980px}
+  .about-copy p{max-width:780px}
+  blockquote{max-width:430px;justify-self:end}
+  .values{
+    margin-top:72px;
+  }
+  .values article{
+    min-height:205px;
+    padding-top:26px;
+    padding-bottom:24px;
+  }
+  .value-word{margin:32px 0 10px}
+
+  /* On desktop this becomes a photo field, not a swipeable carousel. */
+  .life-section{
+    padding-right:var(--desktop-gutter);
+    overflow:visible;
+  }
+  .section-intro{
+    grid-template-columns:minmax(0,1.22fr) minmax(300px,.42fr);
+    gap:clamp(60px,7vw,138px);
+    padding-right:0;
+    margin-bottom:54px;
+  }
+  .section-intro p{max-width:500px}
+  .story-strip{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(18px,1.65vw,32px);
+    overflow:visible;
+    scroll-snap-type:none;
+    padding-right:0;
+  }
+  .story-card{
+    min-width:0;
+    flex:none;
+    scroll-snap-align:none;
+  }
+  .story-card img{
+    aspect-ratio:1.28;
+  }
+  .story-card figcaption{
+    grid-template-columns:96px 1fr;
+    gap:18px;
+  }
+  .story-meta{display:none}
+
+  .editorial-pause{
+    min-height:0;
+    padding:18px var(--desktop-gutter) clamp(90px,7vw,132px);
+    grid-template-rows:auto auto;
+  }
+  .pause-copy{
+    align-self:auto;
+    padding-top:clamp(58px,5vw,94px);
+    grid-template-columns:minmax(150px,.32fr) minmax(0,1fr);
+    max-width:1180px;
+  }
+  .pause-copy p{max-width:760px}
+
+  .connect-section{
+    padding-left:var(--desktop-gutter);
+    grid-template-columns:minmax(420px,.88fr) minmax(0,1.12fr);
+    gap:clamp(70px,7.2vw,148px);
+    align-items:center;
+  }
+  .connect-art-shell{
+    max-width:760px;
+    justify-self:start;
+  }
+  .connect-copy{
+    padding-right:0;
+    max-width:760px;
+  }
+
+  .sermon-grid{
+    grid-template-columns:minmax(230px,.42fr) minmax(0,1.38fr);
+    gap:clamp(72px,8vw,160px);
+  }
+  .sermon-stamp{max-width:260px}
+  .dark-section h2{max-width:1000px}
+
+  .give-section{
+    min-height:520px;
+    padding-top:104px;
+    padding-bottom:128px;
+  }
+  .give-section h2{max-width:1120px}
+
+  footer{
+    min-height:176px;
+    padding:34px var(--desktop-gutter);
+  }
+
+  /* Interior pages: landscape editorial pacing rather than tall slide panels. */
+  .interior-header{
+    min-height:84px;
+    padding:10px var(--desktop-gutter);
+  }
+  .interior-hero{
+    min-height:clamp(560px,70svh,760px);
+    padding:clamp(62px,5.2vw,96px) var(--desktop-gutter);
+  }
+  .interior-hero-copy{
+    max-width:1180px;
+  }
+  .interior-hero h1{
+    max-width:1180px;
+    font-size:clamp(86px,8.1vw,148px);
+  }
+  .interior-lead{
+    max-width:760px;
+  }
+  .interior-section{
+    padding:clamp(84px,6.5vw,124px) var(--desktop-gutter);
+  }
+  .interior-section-label{
+    margin-bottom:clamp(48px,4vw,68px);
+  }
+
+  .city-hero{
+    grid-template-columns:minmax(0,1.18fr) minmax(320px,.42fr);
+  }
+  .city-grid-art{inset:2% -3% -9% 43%}
+  .city-note{
+    width:min(420px,100%);
+    margin-top:2vh;
+  }
+  .rhythm-grid article{
+    min-height:290px;
+  }
+  .city-network{
+    min-height:0;
+    grid-template-columns:minmax(220px,.44fr) minmax(0,1fr) minmax(300px,.5fr);
+    gap:clamp(52px,6vw,116px);
+  }
+  .network-mark{max-width:250px}
+
+  .sermon-hero{
+    min-height:clamp(580px,72svh,790px);
+  }
+  .sermon-hero-image{inset:0 0 0 55%}
+  .sermon-hero .interior-hero-copy{max-width:1080px}
+  .latest-card{
+    min-height:190px;
+    grid-template-columns:70px 70px minmax(0,1fr) auto;
+  }
+  .series-intro{
+    grid-template-columns:minmax(0,1.2fr) minmax(300px,.38fr);
+    margin-bottom:54px;
+  }
+  .series-list a{min-height:108px}
+
+  .kids-hero{
+    grid-template-columns:minmax(0,1.18fr) minmax(360px,.48fr);
+  }
+  .kids-art{inset:4% -2% 0 55%}
+  .parent-band{
+    min-height:220px;
+    padding:42px var(--desktop-gutter);
+  }
+  .class-stack article{
+    min-height:174px;
+    grid-template-columns:130px minmax(260px,.6fr) minmax(360px,1fr);
+  }
+  .class-age{width:94px;height:94px}
+  .kids-promise{
+    min-height:500px;
+  }
+  .kids-sunday{
+    min-height:470px;
+  }
+  .interior-footer{
+    min-height:156px;
+    padding:32px var(--desktop-gutter);
+  }
+}
+
+@media (min-width: 1600px) {
+  .hero{
+    grid-template-columns:minmax(0,1.68fr) minmax(460px,.68fr);
+  }
+  .hero-copy{max-width:700px}
+  .section h2{font-size:clamp(62px,5.3vw,102px)}
+  .story-card img{aspect-ratio:1.38}
+}
