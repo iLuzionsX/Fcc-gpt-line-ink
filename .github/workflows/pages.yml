@@ -56,6 +56,22 @@ jobs:
         working-directory: preview-src
         run: npx vite build --base=/Fcc-gpt-line-ink/previews/design/scrolling-branch-polish/ --outDir="${{ github.workspace }}/dist/client/previews/design/scrolling-branch-polish"
 
+      - name: Check out Ink in Motion preview
+        uses: actions/checkout@v4
+        with:
+          ref: design/ink-in-motion
+          path: ink-src
+
+      - name: Install Ink in Motion dependencies
+        working-directory: ink-src
+        run: npm ci --no-audit --no-fund
+
+      - name: Verify and build Ink in Motion preview
+        working-directory: ink-src
+        run: |
+          npm run test:sites
+          npx vite build --base=/Fcc-gpt-line-ink/previews/ink-in-motion/ --outDir="${{ github.workspace }}/dist/client/previews/ink-in-motion"
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true
