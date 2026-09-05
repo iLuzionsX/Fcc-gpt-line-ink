@@ -2,6 +2,9 @@
 .ink-app .ink-scene,.ink-app .ink-logo{mix-blend-mode:multiply}
 .ink-app .hero-sticky,.ink-app .ink-header{background:var(--ivory)}
 .ink-app .chapter-body,.ink-app .chapter-art{background:var(--ivory)}
+.ink-app .ink-header nav a{min-width:44px}
+.ink-app .hero-sticky{transform:none;opacity:1}
+.ink-app .hero-composition{opacity:calc(1 - var(--hero-progress)*.55);transform:scale(calc(1 - var(--hero-progress)*.08));transform-origin:center}
 html[lang=es] .ink-app .hero-composition h1{font-size:clamp(64px,8.5vw,142px)}
 html[lang=es] .ink-app .hero-composition h1 span{margin-left:4vw}
 .ink-app .hero-composition h1{transform:translateX(calc(var(--hero-progress)*-55px));will-change:transform}
